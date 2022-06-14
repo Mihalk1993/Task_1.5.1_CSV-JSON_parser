@@ -6,7 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Task_1.5.1_CSV-JSON_parser" />
+        <module name="Task_1.5_Working with CSV, XML, JSON files homework" />
       </profile>
     </annotationProcessing>
   </component>
