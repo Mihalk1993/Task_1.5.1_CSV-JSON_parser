@@ -17,12 +17,17 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
+//      Task_1.5.1_CSV-JSON_parser
         String[] columnMapping = {"id", "firstName", "lastName", "country", "age"};
         String fileCSV = "data.csv";
         String fileJSON = "data.json";
         List<Employee> list = parseCSV(columnMapping, fileCSV);
         String json = listToJson(list);
         writeString(fileJSON, json);
+
+//      Task_1.5.2_XML-JSON_parser
+
+
     }
 
     private static List<Employee> parseCSV(String[] columnMapping, String fileName) {
