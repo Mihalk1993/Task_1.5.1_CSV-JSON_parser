@@ -1,25 +1,25 @@
 package ru.netology;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Main {
     public static void main(String[] args) {
@@ -38,6 +38,12 @@ public class Main {
         String json2 = listToJson(list2);
         writeString(xmlToJson, json2);
 
+//      Task_1.5.3_JSON parser
+        String json3 = readString("data2.json");
+        List<Employee> list3 = jsonToList(json3);
+        for (Employee employee : list3) {
+            System.out.println(employee);
+        }
     }
 
     private static List<Employee> parseCSV(String[] columnMapping, String fileName) {
@@ -98,7 +104,7 @@ public class Main {
                     String country = element.getElementsByTagName("country").item(0).getTextContent();
                     int age = Integer.parseInt(element.getElementsByTagName("age").item(0).getTextContent());
 
-                    list.add (new Employee(id, firstName, lastName, country, age));
+                    list.add(new Employee(id, firstName, lastName, country, age));
 
                 }
             }
@@ -107,5 +113,46 @@ public class Main {
         }
         return list;
     }
+
+    private static String readString(String json) {
+        JSONArray jsonArray = null;
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(json));
+            JSONParser parser = new JSONParser();
+            try {
+                Object obj = parser.parse(bufferedReader);
+                jsonArray = (JSONArray) obj;
+            } catch (ParseException | ClassCastException e) {
+                System.out.println("Ошибка приведения класса...");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return String.valueOf(jsonArray);
+    }
+
+    private static List<Employee> jsonToList(String json) {
+
+        JSONParser parser = new JSONParser();
+        JSONArray jsonArray = null;
+        Employee employee;
+        List<Employee> list = new ArrayList<>();
+
+        try {
+            jsonArray = (JSONArray) parser.parse(json);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+
+        for (int i = 0; i < Objects.requireNonNull(jsonArray).size(); i++) {
+            employee = gson.fromJson(String.valueOf(jsonArray.get(i)), Employee.class);
+            list.add(employee);
+        }
+        return list;
+    }
+
 }
 
